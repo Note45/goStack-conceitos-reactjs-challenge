@@ -14,14 +14,24 @@ function App() {
   }, []);
 
   async function handleAddRepository() {
-    // TODO
+    const response = await api.post('repositories', {
+      title: `Novo projeto ${Date.now()}`,
+      url: 'www.test.com',
+      techs: ['NodeJS', 'JavaScript', 'HTML', 'CSS']
+    });
+
+    const repository = response.data;
+
+    setRepositories([...repositories, repository]);
   }
 
   async function handleRemoveRepository(id) {
-    // TODO
-  }
+    await api.delete(`repositories/${id}`);
 
-  console.log(repositories);
+    setRepositories(repositories.filter(
+        repository => repository.id !== id
+    ));
+  }
 
   return (
     <div>
@@ -30,7 +40,7 @@ function App() {
           <li key={repository.id}>
             {repository.title}
 
-            <button onClick={() => handleRemoveRepository(1)}>
+            <button onClick={() => handleRemoveRepository(repository.id)}>
               Remover
             </button>
           </li>
